@@ -53,6 +53,6 @@ swapoff -a
 curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 apt-get update
-apt-get install -y kubelet=1.22.5-00 kubectl=1.22.5-00 kubeadm=1.22.5-00
+apt-get install -y kubelet=1.22.6-00 kubectl=1.22.6-00 kubeadm=1.22.6-00
 apt-mark hold kubelet kubeadm kubectl
 systemctl enable kubelet && systemctl start kubelet
