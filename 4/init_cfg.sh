@@ -32,8 +32,6 @@ echo "[TASK 8] Install Docker Engine"
 curl -fsSL https://get.docker.com | sh >/dev/null 2>&1
 
 echo "[TASK 9] Change Cgroup Driver Using Systemd"
-# cat <<EOF | tee /etc/docker/daemon.json
-# EOF
 cat <<EOT > /etc/docker/daemon.json
 {"exec-opts": ["native.cgroupdriver=systemd"]}
 EOT
