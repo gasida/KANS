@@ -18,7 +18,7 @@ systemctl stop apparmor && systemctl disable apparmor >/dev/null 2>&1
 
 echo "[TASK 5] Install Packages"
 apt update -qq >/dev/null 2>&1
-apt-get install bridge-utils net-tools jq tree resolvconf ipset iputils-arping ipvsadm -y -qq >/dev/null 2>&1
+apt-get install bridge-utils net-tools jq tree resolvconf ngrep ipset iputils-arping ipvsadm -y -qq >/dev/null 2>&1
 
 echo "[TASK 6] Change DNS Server IP Address"
 echo -e "nameserver 1.1.1.1" > /etc/resolvconf/resolv.conf.d/head
