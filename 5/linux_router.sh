@@ -93,7 +93,7 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl 2>&1
 
 echo "[TASK 12] Config kubeconfig"
 mkdir -p $HOME/.kube
-#sshpass -p "qwe123" scp -o StrictHostKeyChecking=no root@k8s-m:/etc/kubernetes/admin.conf $HOME/.kube/config 2>&1
+sshpass -p "qwe123" scp -o StrictHostKeyChecking=no root@k8s-m:/etc/kubernetes/admin.conf $HOME/.kube/config 2>&1
 
 echo "[TASK 13] Source the completion"
 source <(kubectl completion bash)

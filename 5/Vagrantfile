@@ -6,25 +6,6 @@ BOX_VERSION = "20211026.0.0"
 N = 2
 
 Vagrant.configure("2") do |config|
-#-----Router Node
-    config.vm.define "k8s-rtr" do |subconfig|
-      subconfig.vm.box = BOX_IMAGE
-      subconfig.vm.box_version = BOX_VERSION
-      subconfig.vm.provider "virtualbox" do |v|
-        v.customize ["modifyvm", :id, "--groups", "/Service-DNS-Lab"]
-        v.name = "Service-DNS-k8s-rtr"
-        v.memory = 512  
-        v.cpus = 1
-        v.linked_clone = true
-      end
-      subconfig.vm.hostname = "k8s-rtr"
-      subconfig.vm.synced_folder "./", "/vagrant", disabled: true
-      subconfig.vm.network "private_network", ip: "192.168.10.254"
-      subconfig.vm.network "private_network", ip: "192.168.20.254"
-      subconfig.vm.network "forwarded_port", guest: 22, host: 50000, auto_correct: true, id: "ssh"
-      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/5/linux_router.sh", args: N
-    end
-
 #-----Manager Node
     config.vm.define "k8s-m" do |subconfig|
       subconfig.vm.box = BOX_IMAGE
@@ -44,6 +25,25 @@ Vagrant.configure("2") do |config|
       subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/5/init_cfg.sh", args: N
       subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/5/route1.sh"
       subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/5/master.sh"
+    end
+
+#-----Router Node
+    config.vm.define "k8s-rtr" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.box_version = BOX_VERSION
+      subconfig.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--groups", "/Service-DNS-Lab"]
+        v.name = "Service-DNS-k8s-rtr"
+        v.memory = 512  
+        v.cpus = 1
+        v.linked_clone = true
+      end
+      subconfig.vm.hostname = "k8s-rtr"
+      subconfig.vm.synced_folder "./", "/vagrant", disabled: true
+      subconfig.vm.network "private_network", ip: "192.168.10.254"
+      subconfig.vm.network "private_network", ip: "192.168.20.254"
+      subconfig.vm.network "forwarded_port", guest: 22, host: 50000, auto_correct: true, id: "ssh"
+      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/5/linux_router.sh", args: N
     end
 
 #-----Worker Node Subnet1
