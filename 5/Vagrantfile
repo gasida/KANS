@@ -1,6 +1,6 @@
 # Base Image
 BOX_IMAGE = "ubuntu/focal64"
-BOX_VERSION = "20211026.0.0"
+BOX_VERSION = "20220208.0.0"
 
 # max number of worker nodes
 N = 2
