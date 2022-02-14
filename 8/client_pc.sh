@@ -34,7 +34,7 @@ install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl 2>&1
 
 echo "[TASK 9] Config kubeconfig"
 mkdir -p $HOME/.kube
-sshpass -p "qwe123" scp -o StrictHostKeyChecking=no root@k8s-m:/etc/kubernetes/admin.conf $HOME/.kube/config 2>&1
+sshpass -p "qwe123" scp -o StrictHostKeyChecking=no root@k8s-m:/etc/kubernetes/admin.conf $HOME/.kube/config >/dev/null 2>&1
 
 echo "[TASK 10] Source the completion"
 source <(kubectl completion bash)
@@ -55,7 +55,7 @@ echo -e "<h1>Web Server : $(hostname)</h1>" > /var/www/html/index.html
 echo "[TASK 14] Install Envoy"
 apt install apt-transport-https gnupg2 curl lsb-release -y >/dev/null 2>&1
 curl -sL 'https://deb.dl.getenvoy.io/public/gpg.8115BA8E629CC074.key' | sudo gpg --dearmor -o /usr/share/keyrings/getenvoy-keyring.gpg >/dev/null 2>&1
-echo a077cb587a1b622e03aa4bf2f3689de14658a9497a9af2c427bba5f4cc3c4723 /usr/share/keyrings/getenvoy-keyring.gpg | sha256sum --check
+echo a077cb587a1b622e03aa4bf2f3689de14658a9497a9af2c427bba5f4cc3c4723 /usr/share/keyrings/getenvoy-keyring.gpg | sha256sum --check >/dev/null 2>&1
 echo "deb [arch=amd64 signed-by=/usr/share/keyrings/getenvoy-keyring.gpg] https://deb.dl.getenvoy.io/public/deb/ubuntu $(lsb_release -cs) main" > /etc/apt/sources.list.d/getenvoy.list
 apt update >/dev/null 2>&1
 apt install -y getenvoy-envoy >/dev/null 2>&1
