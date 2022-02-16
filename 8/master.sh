@@ -38,12 +38,13 @@ echo "[TASK 8] Install Kubeps & Setting PS1"
 git clone https://github.com/jonmosco/kube-ps1.git /root/kube-ps1 >/dev/null 2>&1
 cat <<"EOT" >> ~/.bash_profile
 source /root/kube-ps1/kube-ps1.sh
-KUBE_PS1_SYMBOL_ENABLE=false
+KUBE_PS1_SYMBOL_ENABLE=true
+KUBE_PS1_SYMBOL_DEFAULT=🧑‍🎓
 function get_cluster_short() {
   echo "$1" | cut -d . -f1
 }
 KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
-KUBE_PS1_SUFFIX=')🍒 '
+KUBE_PS1_SUFFIX=') '
 PS1='$(kube_ps1)'$PS1
 EOT
 kubectl config rename-context "kubernetes-admin@kubernetes" "Istio-k8s" >/dev/null 2>&1
