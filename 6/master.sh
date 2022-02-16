@@ -38,7 +38,8 @@ echo "[TASK 8] Install Kubeps & Setting PS1"
 git clone https://github.com/jonmosco/kube-ps1.git /root/kube-ps1 >/dev/null 2>&1
 cat <<"EOT" >> ~/.bash_profile
 source /root/kube-ps1/kube-ps1.sh
-KUBE_PS1_SYMBOL_ENABLE=false
+KUBE_PS1_SYMBOL_ENABLE=true
+KUBE_PS1_SYMBOL_DEFAULT=🥕
 function get_cluster_short() {
   echo "$1" | cut -d . -f1
 }
