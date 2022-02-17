@@ -44,7 +44,7 @@ function get_cluster_short() {
   echo "$1" | cut -d . -f1
 }
 KUBE_PS1_CLUSTER_FUNCTION=get_cluster_short
-KUBE_PS1_SUFFIX=')🍓 '
+KUBE_PS1_SUFFIX=') '
 PS1='$(kube_ps1)'$PS1
 EOT
 kubectl config rename-context "kubernetes-admin@kubernetes" "Ingress-k8s" >/dev/null 2>&1
