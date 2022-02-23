@@ -55,7 +55,7 @@ apt install kubetail etcd-client -y -qq >/dev/null 2>&1
 echo "[TASK 10] Install Helm"
 curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash >/dev/null 2>&1
 
-echo "[TASK 11] Install Metrics-server v0.6.1"
+echo "[TASK 11] Install Metrics server - v0.6.1"
 kubectl apply -f https://raw.githubusercontent.com/gasida/KANS/main/8/metrics-server.yaml >/dev/null 2>&1
 
 echo ">>>> K8S Controlplane Config End <<<<"
