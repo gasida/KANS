@@ -29,7 +29,7 @@ echo "192.168.10.10 k8s-m" >> /etc/hosts
 for (( i=1; i<=$1; i++  )); do echo "192.168.10.10$i k8s-w$i" >> /etc/hosts; done
 
 echo "[TASK 8] Install kubectl"
-curl -s -LO https://dl.k8s.io/release/v1.22.6/bin/linux/amd64/kubectl >/dev/null 2>&1
+curl -s -LO https://dl.k8s.io/release/v1.22.7/bin/linux/amd64/kubectl >/dev/null 2>&1
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl >/dev/null 2>&1
 
 echo "[TASK 9] Config kubeconfig"
@@ -102,5 +102,9 @@ EOF
 chown quagga:quagga /etc/quagga/bgpd.conf
 chmod 640 /etc/quagga/bgpd.conf
 systemctl enable bgpd >/dev/null 2>&1 && systemctl start bgpd
+
+echo "[TASK 15] Install Apache"
+apt install apache2 -y >/dev/null 2>&1
+echo -e "<h1>Web Server : $(hostname)</h1>" > /var/www/html/index.html
 
 echo ">>>> Initial Config End <<<<"

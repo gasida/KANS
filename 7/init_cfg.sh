@@ -12,8 +12,11 @@ systemctl restart sshd
 echo "[TASK 3] Setting Profile & Bashrc"
 echo 'alias vi=vim' >> /etc/profile
 echo "sudo su -" >> .bashrc
+# Change Timezone
+ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
 echo "[TASK 4] Disable AppArmor"
+systemctl stop ufw && systemctl disable ufw >/dev/null 2>&1
 systemctl stop apparmor && systemctl disable apparmor >/dev/null 2>&1
 
 echo "[TASK 5] Install Packages"
@@ -29,14 +32,8 @@ echo "192.168.10.10 k8s-m" >> /etc/hosts
 for (( i=1; i<=$1; i++  )); do echo "192.168.10.10$i k8s-w$i" >> /etc/hosts; done
 
 # Install Runtime - Containerd https://kubernetes.io/docs/setup/production-environment/container-runtimes/
-echo "[TASK 8] Install containerd.io"
-cat <<EOF > /etc/modules-load.d/containerd.conf
-overlay
-br_netfilter
-EOF
-modprobe overlay
-modprobe br_netfilter
-# Letting iptables see bridged traffic
+echo "[TASK 8] Install Docker Engine"
+curl -fsSL https://get.docker.com | sh >/dev/null 2>&1
 echo 'net.ipv4.conf.lxc*.rp_filter = 0' > /etc/sysctl.d/99-override_cilium_rp_filter.conf
 systemctl restart systemd-sysctl >/dev/null 2>&1
 cat <<EOF >  /etc/sysctl.d/k8s.conf
@@ -46,25 +43,22 @@ net.bridge.bridge-nf-call-iptables = 1
 EOF
 sysctl -p >/dev/null 2>&1
 sysctl --system >/dev/null 2>&1
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
-apt-get update >/dev/null 2>&1
-apt-get install containerd.io -y >/dev/null 2>&1
-mkdir -p /etc/containerd
-containerd config default > /etc/containerd/config.toml
 
-echo "[TASK 9] Using the systemd cgroup driver"
-sed -i'' -r -e "/runc.options/a\            SystemdCgroup = true" /etc/containerd/config.toml
-systemctl restart containerd
+echo "[TASK 9] Change Cgroup Driver Using Systemd"
+cat <<EOT > /etc/docker/daemon.json
+{"exec-opts": ["native.cgroupdriver=systemd"]}
+EOT
+systemctl daemon-reload >/dev/null 2>&1
+systemctl restart docker
 
 echo "[TASK 10] Disable and turn off SWAP"
 swapoff -a
 
-echo "[TASK 11] Install Kubernetes components (kubeadm, kubelet and kubectl) - v1.22.6"
+echo "[TASK 11] Install Kubernetes components (kubeadm, kubelet and kubectl) - v1.22.7"
 curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg >/dev/null 2>&1
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
 apt-get update >/dev/null 2>&1
-apt-get install -y kubelet=1.22.6-00 kubectl=1.22.6-00 kubeadm=1.22.6-00 >/dev/null 2>&1
+apt-get install -y kubelet=1.22.7-00 kubectl=1.22.7-00 kubeadm=1.22.7-00 >/dev/null 2>&1
 apt-mark hold kubelet kubeadm kubectl >/dev/null 2>&1
 systemctl enable kubelet && systemctl start kubelet
 

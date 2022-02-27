@@ -18,7 +18,7 @@ echo 'alias k=kubectl' >> /etc/profile
 echo 'complete -F __start_kubectl k' >> /etc/profile
 
 echo "[TASK 5] Install Cilium Cli"
-curl -s -L --remote-name-all https://github.com/cilium/cilium-cli/releases/download/v0.10.2/cilium-linux-amd64.tar.gz
+curl -s -L --remote-name-all https://github.com/cilium/cilium-cli/releases/download/v0.10.4/cilium-linux-amd64.tar.gz
 tar xzvfC cilium-linux-amd64.tar.gz /usr/local/bin >/dev/null 2>&1
 curl -s -L --remote-name-all https://github.com/cilium/hubble/releases/download/v0.9.0/hubble-linux-amd64.tar.gz
 tar xzvfC hubble-linux-amd64.tar.gz /usr/local/bin >/dev/null 2>&1
