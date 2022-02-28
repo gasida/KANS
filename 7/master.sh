@@ -15,7 +15,8 @@ curl -s https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | 
 
 echo "[TASK 4] Install Cilium(v1.11.2) Hubble(v0.9.0) w/Helm"
 helm repo add cilium https://helm.cilium.io/ >/dev/null 2>&1
-helm install cilium cilium/cilium --version 1.11.2 --namespace kube-system --set kubeProxyReplacement=strict --set k8sServiceHost=192.168.10.10 --set k8sServicePort=6443 --set tunnel=disabled --set autoDirectNodeRoutes=true --set ipv4NativeRoutingCIDR=192.168.0.0/16 --set ipam.operator.clusterPoolIPv4PodCIDR=172.16.0.0/16 --set hubble.relay.enabled=true --set hubble.ui.enabled=true --set operator.replicas=1 --set hostServices.enabled=true --set endpointRoutes.enabled=true --set devices={"enp0s8,enp0s3"} --set enableIPv4Masquerade=true --set bpf.masquerade=true --set nodePort.enabled=true >/dev/null 2>&1
+#helm install cilium cilium/cilium --version 1.11.2 --namespace kube-system --set k8sServiceHost=192.168.10.10 --set k8sServicePort=6443 --set debug.enabled=true --set autoDirectNodeRoutes=true --set endpointRoutes.enabled=true --set hubble.relay.enabled=true --set hubble.ui.enabled=true --set ipam.mode=kubernetes --set k8s.requireIPv4PodCIDR=true --set kubeProxyReplacement=strict --set ipv4NativeRoutingCIDR=192.168.0.0/16 --set tunnel=disabled --set operator.replicas=1 --set egressGateway.enabled=true --set enableIPv4Masquerade=true --set bpf.masquerade=true --set loadBalancer.mode=dsr --set bandwidthManager=true >/dev/null 2>&1
+helm install cilium cilium/cilium --version 1.11.2 --namespace kube-system --set k8sServiceHost=192.168.10.10 --set k8sServicePort=6443 --set debug.enabled=true --set autoDirectNodeRoutes=true --set endpointRoutes.enabled=true --set hubble.relay.enabled=true --set hubble.ui.enabled=true --set ipam.mode=kubernetes --set k8s.requireIPv4PodCIDR=true --set kubeProxyReplacement=strict --set ipv4NativeRoutingCIDR=192.168.0.0/16 --set tunnel=disabled --set operator.replicas=1 --set egressGateway.enabled=true --set enableIPv4Masquerade=true --set bpf.masquerade=true --set loadBalancer.mode=dsr --set bandwidthManager=true --set prometheus.enabled=true --set operator.prometheus.enabled=true --set hubble.metrics.enabled="{dns:query;ignoreAAAA,drop,tcp,flow,icmp,http}" --set hostServices.enabled=true --set bpf.hostRouting=true >/dev/null 2>&1
 curl -s -L --remote-name-all https://github.com/cilium/cilium-cli/releases/download/v0.10.4/cilium-linux-amd64.tar.gz
 tar xzvfC cilium-linux-amd64.tar.gz /usr/local/bin >/dev/null 2>&1
 
@@ -61,23 +62,5 @@ apt install kubetail etcd-client -y -qq >/dev/null 2>&1
 
 echo "[TASK 10] Install Metrics server - v0.6.1"
 kubectl apply -f https://raw.githubusercontent.com/gasida/KANS/main/8/metrics-server.yaml >/dev/null 2>&1
-
-echo "[TASK 11] Install MetalLB - v0.12.1"
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/namespace.yaml
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
-cat <<EOF | kubectl create -f -
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  namespace: metallb-system
-  name: config
-data:
-  config: |
-    address-pools:
-    - name: default
-      protocol: layer2
-      addresses:
-      - 192.168.10.200-192.168.10.210
-EOF
 
 echo ">>>> K8S Controlplane Config End <<<<"

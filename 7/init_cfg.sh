@@ -31,7 +31,6 @@ echo "[TASK 7] Setting Local DNS Using Hosts file"
 echo "192.168.10.10 k8s-m" >> /etc/hosts
 for (( i=1; i<=$1; i++  )); do echo "192.168.10.10$i k8s-w$i" >> /etc/hosts; done
 
-# Install Runtime - Containerd https://kubernetes.io/docs/setup/production-environment/container-runtimes/
 echo "[TASK 8] Install Docker Engine"
 curl -fsSL https://get.docker.com | sh >/dev/null 2>&1
 echo 'net.ipv4.conf.lxc*.rp_filter = 0' > /etc/sysctl.d/99-override_cilium_rp_filter.conf
