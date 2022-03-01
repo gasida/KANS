@@ -29,8 +29,8 @@ echo "192.168.10.10 k8s-m" >> /etc/hosts
 for (( i=1; i<=$1; i++  )); do echo "192.168.10.10$i k8s-w$i" >> /etc/hosts; done
 
 echo "[TASK 8] Install kubectl"
-curl -s -LO https://dl.k8s.io/release/v1.22.6/bin/linux/amd64/kubectl 2>&1
-install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl 2>&1
+curl -s -LO https://dl.k8s.io/release/v$2/bin/linux/amd64/kubectl >/dev/null 2>&1
+install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl >/dev/null 2>&1
 
 echo "[TASK 9] Config kubeconfig"
 mkdir -p $HOME/.kube
@@ -44,8 +44,8 @@ echo "[TASK 11] Alias kubectl to k"
 echo 'alias k=kubectl' >> /etc/profile
 echo 'complete -F __start_kubectl k' >> /etc/profile
 
-echo "[TASK 12] Install calicoctl Tool - v3.21.4"
-curl -L https://github.com/projectcalico/calico/releases/download/v3.21.4/calicoctl-linux-amd64 -o calicoctl >/dev/null 2>&1
+echo "[TASK 12] Install calicoctl Tool - v$3"
+curl -L https://github.com/projectcalico/calico/releases/download/v$3/calicoctl-linux-amd64 -o calicoctl >/dev/null 2>&1
 chmod +x calicoctl && mv calicoctl /usr/bin
 
 echo "[TASK 13] Install Apache"

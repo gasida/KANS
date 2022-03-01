@@ -17,8 +17,8 @@ echo "[TASK 4] Alias kubectl to k"
 echo 'alias k=kubectl' >> /etc/profile
 echo 'complete -F __start_kubectl k' >> /etc/profile
 
-echo "[TASK 5] Install calicoctl Tool - v3.21.4"
-curl -L https://github.com/projectcalico/calico/releases/download/v3.21.4/calicoctl-linux-amd64 -o calicoctl >/dev/null 2>&1
+echo "[TASK 5] Install calicoctl Tool - v$3"
+curl -L https://github.com/projectcalico/calico/releases/download/v$3/calicoctl-linux-amd64 -o calicoctl >/dev/null 2>&1
 chmod +x calicoctl && mv calicoctl /usr/bin
 
 echo ">>>> K8S Node config End <<<<"

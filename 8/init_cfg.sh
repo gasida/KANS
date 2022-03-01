@@ -12,8 +12,11 @@ systemctl restart sshd
 echo "[TASK 3] Setting Profile & Bashrc"
 echo 'alias vi=vim' >> /etc/profile
 echo "sudo su -" >> .bashrc
+# Change Timezone
+ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
 
 echo "[TASK 4] Disable AppArmor"
+systemctl stop ufw && systemctl disable ufw >/dev/null 2>&1
 systemctl stop apparmor && systemctl disable apparmor >/dev/null 2>&1
 
 echo "[TASK 5] Install Packages"
@@ -41,11 +44,11 @@ systemctl restart docker
 echo "[TASK 10] Disable and turn off SWAP"
 swapoff -a
 
-echo "[TASK 11] Install Kubernetes components (kubeadm, kubelet and kubectl) - v1.22.6"
+echo "[TASK 11] Install Kubernetes components (kubeadm, kubelet and kubectl) - v$2"
 curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg >/dev/null 2>&1
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" > /etc/apt/sources.list.d/kubernetes.list
 apt-get update >/dev/null 2>&1
-apt-get install -y kubelet=1.22.6-00 kubectl=1.22.6-00 kubeadm=1.22.6-00 >/dev/null 2>&1
+apt-get install -y kubelet=$2-00 kubectl=$2-00 kubeadm=$2-00 >/dev/null 2>&1
 apt-mark hold kubelet kubeadm kubectl >/dev/null 2>&1
 systemctl enable kubelet && systemctl start kubelet
 

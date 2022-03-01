@@ -10,11 +10,11 @@ mkdir -p $HOME/.kube
 cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
 chown $(id -u):$(id -g) $HOME/.kube/config
 
-echo "[TASK 3] Install Calico CNI - v3.21.4"
+echo "[TASK 3] Install Calico CNI - v$3"
 kubectl apply -f https://raw.githubusercontent.com/gasida/KANS/main/4/calico-kans.yaml >/dev/null 2>&1
 
-echo "[TASK 4] Install calicoctl Tool - v3.21.4"
-curl -L https://github.com/projectcalico/calico/releases/download/v3.21.4/calicoctl-linux-amd64 -o calicoctl >/dev/null 2>&1
+echo "[TASK 4] Install calicoctl Tool - v$3"
+curl -L https://github.com/projectcalico/calico/releases/download/v$3/calicoctl-linux-amd64 -o calicoctl >/dev/null 2>&1
 chmod +x calicoctl && mv calicoctl /usr/bin
 
 echo "[TASK 5] Source the completion"
