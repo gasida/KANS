@@ -9,11 +9,17 @@ sed -i "s/^PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd
 sed -i "s/^#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
 systemctl restart sshd
 
-echo "[TASK 3] Setting Profile & Bashrc"
-echo 'alias vi=vim' >> /etc/profile
-echo "sudo su -" >> .bashrc
+echo "[TASK 3] Change Timezone & Install Ccat & Setting Profile & Bashrc"
 # Change Timezone
 ln -sf /usr/share/zoneinfo/Asia/Seoul /etc/localtime
+# Install Ccat
+curl -s -L https://github.com/owenthereal/ccat/releases/download/v1.1.0/linux-amd64-1.1.0.tar.gz | tar -xz  -C /tmp/
+cp /tmp/linux-amd64-1.1.0/ccat /usr/local/bin/
+chmod +x /usr/local/bin/ccat
+#  Setting Profile & Bashrc
+echo 'alias vi=vim' >> /etc/profile
+echo "sudo su -" >> .bashrc
+echo 'alias cat=/usr/local/bin/ccat' >> /etc/profile
 
 echo "[TASK 4] Disable AppArmor"
 systemctl stop ufw && systemctl disable ufw >/dev/null 2>&1
