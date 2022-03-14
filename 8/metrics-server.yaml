@@ -176,6 +176,7 @@ spec:
         kubernetes.io/os: linux
       priorityClassName: system-cluster-critical
       serviceAccountName: metrics-server
+      hostNetwork: true
       volumes:
       - emptyDir: {}
         name: tmp-dir
