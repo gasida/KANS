@@ -7,28 +7,9 @@ N = 2
 # Version : Ex) k8s_V = '1.22.7'
 k8s_V = '1.23.4'
 calico_V = '3.21.4'
-lab_N = "Calico-k8s"
+lab_N = "KANS-k8s"
 
 Vagrant.configure("2") do |config|
-#-----Router Node
-    config.vm.define "k8s-rtr" do |subconfig|
-      subconfig.vm.box = BOX_IMAGE
-      subconfig.vm.box_version = BOX_VERSION
-      subconfig.vm.provider "virtualbox" do |v|
-        v.customize ["modifyvm", :id, "--groups", "/Calico-Lab"]
-        v.name = "Calico-k8s-rtr"
-        v.memory = 512
-        v.cpus = 1
-        v.linked_clone = true
-      end
-      subconfig.vm.hostname = "k8s-rtr"
-      subconfig.vm.synced_folder "./", "/vagrant", disabled: true
-      subconfig.vm.network "private_network", ip: "192.168.10.254"
-      subconfig.vm.network "private_network", ip: "192.168.20.254"
-      subconfig.vm.network "forwarded_port", guest: 22, host: 50000, auto_correct: true, id: "ssh"
-      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/3/linux_router.sh" 
-    end
-
 #-----Manager Node
     config.vm.define "k8s-m" do |subconfig|
       subconfig.vm.box = BOX_IMAGE
@@ -48,6 +29,25 @@ Vagrant.configure("2") do |config|
       subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/3/init_cfg.sh", args: [ N, k8s_V, calico_V ]
       subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/3/route1.sh"
       subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/3/master.sh", args: [ N, k8s_V, calico_V, lab_N ]
+    end
+
+#-----Router Node
+    config.vm.define "k8s-rtr" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.box_version = BOX_VERSION
+      subconfig.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--groups", "/Calico-Lab"]
+        v.name = "Calico-k8s-rtr"
+        v.memory = 512
+        v.cpus = 1
+        v.linked_clone = true
+      end
+      subconfig.vm.hostname = "k8s-rtr"
+      subconfig.vm.synced_folder "./", "/vagrant", disabled: true
+      subconfig.vm.network "private_network", ip: "192.168.10.254"
+      subconfig.vm.network "private_network", ip: "192.168.20.254"
+      subconfig.vm.network "forwarded_port", guest: 22, host: 50000, auto_correct: true, id: "ssh"
+      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/3/linux_router.sh", args: [ N, k8s_V, calico_V ]
     end
 
 #-----Worker Node Subnet2
