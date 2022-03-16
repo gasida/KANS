@@ -7,7 +7,7 @@ N = 2
 # Version : Ex) k8s_V = '1.22.7'
 k8s_V = '1.23.4'
 calico_V = '3.21.4'
-lab_N = "KANS-k8s"
+lab_N = "Calico-k8s"
 
 Vagrant.configure("2") do |config|
 #-----Manager Node
