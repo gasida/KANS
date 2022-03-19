@@ -1,6 +1,6 @@
 # Base Image
 BOX_IMAGE = "ubuntu/impish64"
-BOX_VERSION = "20220314.0.0"
+BOX_VERSION = "20220319.0.0"
 
 # max number of worker nodes
 N = 2
