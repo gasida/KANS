@@ -34,7 +34,7 @@ echo -e "nameserver 1.1.1.1" > /etc/resolvconf/resolv.conf.d/head
 resolvconf -u
 
 echo "[TASK 7] Install Kind"
-curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64 >/dev/null 2>&1
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.12.0/kind-linux-amd64 >/dev/null 2>&1
 chmod +x ./kind
 mv ./kind /usr/bin
 
@@ -53,7 +53,7 @@ swapoff -a
 
 echo "[TASK 11] Install kubectl"
 #curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-curl -LO "https://dl.k8s.io/release/v1.21.1/bin/linux/amd64/kubectl" >/dev/null 2>&1
+curl -LO "https://dl.k8s.io/release/v1.23.4/bin/linux/amd64/kubectl" >/dev/null 2>&1
 install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
 
 echo "[TASK 12] Install Helm"
@@ -89,8 +89,8 @@ EOT
 echo "[TASK 17] To increase Resource limits"
 # cat /proc/sys/fs/inotify/max_user_watches >> 8192
 # cat /proc/sys/fs/inotify/max_user_instances >> 128
-sysctl fs.inotify.max_user_watches=524288
-sysctl fs.inotify.max_user_instances=512
+sysctl fs.inotify.max_user_watches=524288 >/dev/null 2>&1
+sysctl fs.inotify.max_user_instances=512 >/dev/null 2>&1
 echo 'fs.inotify.max_user_watches=524288' > /etc/sysctl.d/99-kind.conf
 echo 'fs.inotify.max_user_instances=512'  > /etc/sysctl.d/99-kind.conf
 sysctl -p >/dev/null 2>&1
