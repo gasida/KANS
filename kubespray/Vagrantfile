@@ -1,0 +1,74 @@
+# Base Image
+BOX_IMAGE = "ubuntu/focal64"
+BOX_VERSION = "20220315.0.0"
+
+# max number of worker nodes
+N = 2
+
+Vagrant.configure("2") do |config|
+#----- Worker Node
+  (1..N).each do |i|
+    config.vm.define "k8s-n#{i}" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.box_version = BOX_VERSION
+      subconfig.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--groups", "/kubespray"]
+        v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+        v.name = "k8s-n#{i}"
+        v.memory = 2560
+        v.cpus = 2
+        v.linked_clone = true
+      end
+      subconfig.vm.hostname = "k8s-n#{i}"
+      subconfig.vm.synced_folder "./", "/vagrant", disabled: true
+      subconfig.vm.network "private_network", ip: "192.168.10.10#{i}"
+      subconfig.vm.network "forwarded_port", guest: 22, host: "5031#{i}", auto_correct: true, id: "ssh"
+      subconfig.vm.disk :disk, size: "100GB", primary: true
+      subconfig.vm.disk :disk, size: "20GB", name: "extra_storage1"
+      subconfig.vm.disk :disk, size: "20GB", name: "extra_storage2"
+      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/kubespray/init_cfg.sh", args: N
+    end
+  end
+
+#-----Manager Node
+    config.vm.define "k8s-n0" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.box_version = BOX_VERSION
+      subconfig.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--groups", "/kubespray"]
+        v.customize ["modifyvm", :id, "--nicpromisc2", "allow-all"]
+        v.name = "k8s-n0"
+        v.memory = 2560
+        v.cpus = 2
+        v.linked_clone = true
+      end
+      subconfig.vm.hostname = "k8s-n0"
+      subconfig.vm.synced_folder "./", "/vagrant", disabled: true
+      subconfig.vm.network "private_network", ip: "192.168.10.100"
+      subconfig.vm.network "forwarded_port", guest: 22, host: 50310, auto_correct: true, id: "ssh"
+      subconfig.vm.disk :disk, size: "100GB", primary: true
+      subconfig.vm.disk :disk, size: "20GB", name: "extra_storage1"
+      subconfig.vm.disk :disk, size: "20GB", name: "extra_storage2"
+      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/kubespray/init_cfg.sh", args: N
+      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/kubespray/master.sh", args: N
+    end
+
+#-----Client Node
+    config.vm.define "k8s-pc" do |subconfig|
+      subconfig.vm.box = BOX_IMAGE
+      subconfig.vm.box_version = BOX_VERSION
+      subconfig.vm.provider "virtualbox" do |v|
+        v.customize ["modifyvm", :id, "--groups", "/kubespray"]
+        v.name = "k8s-pc"
+        v.memory = 512
+        v.cpus = 1
+        v.linked_clone = true
+      end
+      subconfig.vm.hostname = "k8s-pc"
+      subconfig.vm.synced_folder "./", "/vagrant", disabled: true
+      subconfig.vm.network "private_network", ip: "192.168.10.254"
+      subconfig.vm.network "forwarded_port", guest: 22, host: 50350, auto_correct: true, id: "ssh"
+      subconfig.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/kubespray/client.sh", args: N
+    end
+  
+end
