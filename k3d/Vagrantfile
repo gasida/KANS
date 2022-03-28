@@ -1,0 +1,15 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "ubuntu/focal64"
+    config.vm.box_version = "20220315.0.0"
+    config.vm.hostname = "k3d"
+    config.vm.synced_folder "./", "/vagrant", disabled: true
+    config.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/k3d/init_cfg.sh"
+    config.vm.provider "virtualbox" do |vb1|
+      vb1.memory = 8192
+      vb1.cpus = 4
+      vb1.name = "k3d"
+      vb1.linked_clone = true
+    end
+    config.vm.network "private_network", ip: "192.168.40.10"
+    config.vm.network "forwarded_port", guest: 22, host: 50410, auto_correct: true, id: "ssh"
+  end
