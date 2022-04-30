@@ -1,12 +1,12 @@
 # Base Image
-BOX_IMAGE = "ubuntu/focal64"
-BOX_VERSION = "20220419.0.0"
+BOX_IMAGE = "ubuntu/jammy64"
+BOX_VERSION = "20220423.0.0"
 
 # max number of worker nodes : Ex) N = 3
 N = 2
 
 # Version : Ex) k8s_V = '1.22.7'
-k8s_V = '1.23.5'
+k8s_V = '1.23.6'
 cni_N = '5g'
 calico_V = '3.22.2'
 
