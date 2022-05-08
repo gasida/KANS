@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kafka-svc
+  labels:
+    app: kafka-app
+spec:
+  clusterIP: None
+  ports:
+    - name: '9092'
+      port: 9092
+      protocol: TCP
+      targetPort: 9092
+  selector:
+    app: kafka-app
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  labels:
+    app: kafka-app
+spec:
+  serviceName: kafka-svc
+  replicas: 3
+  selector:
+    matchLabels:
+      app: kafka-app
+  template:
+    metadata:
+      labels:
+        app: kafka-app
+    spec:
+      containers:
+        - name: kafka-container
+          image: doughgle/kafka-kraft
+          ports:
+            - containerPort: 9092  # 9092 for client communication. That is necessary for producers and consumers to connect.
+            - containerPort: 9093  # 9093 for internal, inter-broker communication.
+          env:                     # broker settings
+            - name: REPLICAS       # used as an iterator boundary to set the controller.quorum.voters property to a list of brokers.
+              value: '3'
+            - name: SERVICE        # used to derive the CoreDNS name for each broker in the cluster for setting controller.quorum.voters, listeners and advertised.listeners
+              value: kafka-svc
+            - name: NAMESPACE
+              value: default
+            - name: SHARE_DIR      # used to set log.dirs; The directories in which the Kafka data is stored.
+              value: /mnt/kafka
+            - name: CLUSTER_ID     # CLUSTER_ID is the unique identifier for the Kafka cluster.
+              value: oh-sxaDRTcyAr6pFRbXyzA
+            - name: DEFAULT_REPLICATION_FACTOR  # DEFAULT_REPLICATION_FACTOR is the cluster-wide default replication factor.
+              value: '3'
+            - name: DEFAULT_MIN_INSYNC_REPLICAS # DEFAULT_MIN_INSYNC_REPLICAS is the cluster-wise default in-sync replicas size.
+              value: '2'
+          volumeMounts:
+            - name: data
+              mountPath: /mnt/kafka
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - "ReadWriteOnce"
+        resources:
+          requests:
+            storage: "1Gi"
