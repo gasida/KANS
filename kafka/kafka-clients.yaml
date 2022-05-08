@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-client1
+spec:
+  nodeName: k3d-kube-cluster-server-0
+  containers:
+  - name: kafka-client1
+    image: bitnami/kafka:3.1.0
+    command: ["tail"]
+    args: ["-f", "/dev/null"]
+  terminationGracePeriodSeconds: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kafka-client2
+spec:
+  nodeName: k3d-kube-cluster-server-0
+  containers:
+  - name: kafka-client2
+    image: bitnami/kafka:3.1.0
+    command: ["tail"]
+    args: ["-f", "/dev/null"]
+  terminationGracePeriodSeconds: 0
