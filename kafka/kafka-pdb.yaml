@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: kafka-pdb
+spec:
+  minAvailable: 2     # A minAvailable field defines the minimum number of replicas that should be running at all times.
+  #                   # A maxUnavailable field describes the maximum number of replicas that can be lost in a single time.
+  selector:           # A label selector that matches the Pods. 
+    matchLabels:
+      app: kafka-app
