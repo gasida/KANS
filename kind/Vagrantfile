@@ -1,9 +1,11 @@
+# Base Image : https://portal.cloud.hashicorp.com/vagrant/discover?query=ubuntu%2Fjammy64
+
 Vagrant.configure("2") do |config|
-    config.vm.box = "ubuntu/focal64"
-    config.vm.box_version = "20220324.0.0"
+    config.vm.box = "ubuntu/jammy64"
+    config.vm.box_version = "20240823.0.1"
     config.vm.hostname = "kind"
     config.vm.synced_folder "./", "/vagrant", disabled: true
-    config.vm.provision "shell", path: "https://raw.githubusercontent.com/gasida/KANS/main/kind/init_cfg.sh"
+    config.vm.provision "shell", path: "init_cfg.sh"
     config.vm.provider "virtualbox" do |vb1|
       vb1.customize ["modifyvm", :id, "--nested-hw-virt", "on"]
       vb1.memory = 8192
@@ -11,6 +13,6 @@ Vagrant.configure("2") do |config|
       vb1.name = "kind"
       vb1.linked_clone = true
     end
-    config.vm.network "private_network", ip: "192.168.30.10"
-    config.vm.network "forwarded_port", guest: 22, host: 50310, auto_correct: true, id: "ssh"
+    config.vm.network "private_network", ip: "192.168.50.10"
+    config.vm.network "forwarded_port", guest: 22, host: 60000, auto_correct: true, id: "ssh"
   end
