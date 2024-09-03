@@ -41,6 +41,8 @@ echo 'source <(kubectl completion bash)' >> /etc/profile
 echo "[TASK 9] Alias kubectl to k"
 echo 'alias k=kubectl' >> /etc/profile
 echo 'complete -F __start_kubectl k' >> /etc/profile
+echo 'alias kubectl=kubecolor' >> /etc/profile
+echo 'compdef kubecolor=kubectl' >> /etc/profile
 
 echo "[TASK 10] Install Kubectx & Kubens"
 git clone https://github.com/ahmetb/kubectx /opt/kubectx >/dev/null 2>&1
