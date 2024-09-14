@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webpod1
+  labels:
+    app: webpod
+spec:
+  nodeName: k8s-w1
+  containers:
+  - name: container
+    image: traefik/whoami
+  terminationGracePeriodSeconds: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webpod2
+  labels:
+    app: webpod
+spec:
+  nodeName: k8s-w2
+  containers:
+  - name: container
+    image: traefik/whoami
+  terminationGracePeriodSeconds: 0
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webpod3
+  labels:
+    app: webpod
+spec:
+  nodeName: k8s-w0
+  containers:
+  - name: container
+    image: traefik/whoami
+  terminationGracePeriodSeconds: 0
